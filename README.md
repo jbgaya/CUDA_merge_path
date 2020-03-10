@@ -1,5 +1,5 @@
 # Merge path algorithm with CUDA
-Implementation of a recent merge sort parallelized algorithm, **merge path** from [O. Green et al., 2014(http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.307.6456&rep=rep1&type=pdf).
+Implementation of a recent merge sort parallelized algorithm, **merge path** from [O. Green et al., 2014](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.307.6456&rep=rep1&type=pdf).
 
 ## Description
 
