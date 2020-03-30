@@ -3,7 +3,7 @@
 #include <curand.h>
 using namespace std;
 
-#define n 262144 // Size of array M (should be a power of 2)
+#define n 1048576*2 // Size of array M (should be a power of 2)
 
 // Function that catches the error
 void testCUDA(cudaError_t error, const char *file, int line)  {
@@ -14,7 +14,7 @@ void testCUDA(cudaError_t error, const char *file, int line)  {
 }
 #define testCUDA(error) (testCUDA(error, __FILE__ , __LINE__))
 
-//Sort initialization
+//Sort initialization #1 : with multiple blocks ---> NOT OPTIMAL
 __global__
 void sort_array(unsigned int *M){
 	int index = blockIdx.x * 2;
@@ -22,6 +22,19 @@ void sort_array(unsigned int *M){
 		int swap = M[index];
 		M[index] = M[index+1];
 		M[index+1] = swap;
+	}
+}
+
+//Sort initialization #2 : with multiple blocks ---> OPTIMAL (contiguity)
+__global__
+void sort_array_2(unsigned int *M){
+	int stride = 1024*2;
+	for(int i=threadIdx.x*2;i<n;i+=stride){
+		if(M[i] > M[i+1]){
+			int swap = M[i];
+			M[i] = M[i+1];
+			M[i+1] = swap;
+		}
 	}
 }
 
@@ -123,7 +136,8 @@ int main () {
 // *** Performing sort initialization ***
   cout << "\n---- SORTING ARRAYS OF LENGTH 2 TO INITIALIZE MERGE PATH ----" << endl;
   cudaEventRecord(start,0);
-	sort_array<<<n/2,1>>>(M_dev);
+	//sort_array<<<n/2,1>>>(M_dev);
+	sort_array_2<<<1,min(n/2,1024)>>>(M_dev);
 	cudaEventRecord(stop,0);
   cudaEventSynchronize(stop);
 	cudaEventElapsedTime(&elapsedTime,start,stop);

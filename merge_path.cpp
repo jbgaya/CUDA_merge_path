@@ -5,11 +5,11 @@
 #include <vector>
 using namespace std;
 
-const int d = 1024; // Size of arrays generated
-const int n = 5000; // Number of arrays generated
+const int d = 2; // Size of arrays generated
+const int n = 1048576; // Number of arrays generated
 
 // Generate one random sorted array
-voi d generate_sorted_array(vector<int> &A,mt19937 &G){
+void generate_sorted_array(vector<int> &A,mt19937 &G){
   uniform_int_distribution<> U(0,100);
   A[0] = U(G);
   for (int i = 1; i < d; i++){
