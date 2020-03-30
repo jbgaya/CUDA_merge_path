@@ -28,7 +28,7 @@ void sort_array(unsigned int *M){
 //Sort initialization #2 : with multiple blocks ---> OPTIMAL (contiguity)
 __global__
 void sort_array_2(unsigned int *M){
-	int stride = 1024*2;
+	int stride = min(n/2,1024)*2;
 	for(int i=threadIdx.x*2;i<n;i+=stride){
 		if(M[i] > M[i+1]){
 			int swap = M[i];
